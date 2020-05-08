@@ -1,18 +1,24 @@
-'use strict';
+"use strict";
 
 const cardsContainer = document.querySelector(".places-list");
 const popupContainer = document.querySelector(".popup");
-const popupForm = document.querySelector(".popup__form");
-const popupShowButton = document.querySelector(".user-info__button");
+const popupForm = {
+  form: document.querySelector(".popup__form"),
+  heading: document.querySelector(".popup__title"),
+  nameInput: document.querySelector(".popup__input_type_name"),
+  linkInput: document.querySelector(".popup__input_type_link-url"),
+  button: document.querySelector(".popup__button"),
+};
+const showAddCardFormButton = document.querySelector(".user-info__button");
 const popupHideButton = document.querySelector(".popup__close");
+const editProfileButton = document.querySelector(".user-info__edit-button");
 
-function renderCard(name, link) {
+const renderCard = (name, link) => {
   const card = document.createElement("div");
   card.classList.add("place-card");
   const cardImage = document.createElement("div");
   cardImage.classList.add("place-card__image");
-  cardImage.style.backgroundImage = `url(${link})`
-  // cardImage.setAttribute("style", `background-image: url(${link});`);
+  cardImage.style.backgroundImage = `url(${link})`;
   const deleteIcon = document.createElement("button");
   deleteIcon.classList.add("place-card__delete-icon");
   cardImage.appendChild(deleteIcon);
@@ -32,29 +38,70 @@ function renderCard(name, link) {
   likeButton.addEventListener("click", likeCard);
 
   return card;
-}
+};
 
-function toggleForm() {
-  popupContainer.classList.toggle("popup_is-opened");
-}
+const toggleForm = () => popupContainer.classList.toggle("popup_is-opened");
 
-function likeCard(event) {
-  event.target.classList.toggle("place-card__like-icon_liked");
-}
+const renderForm = (heading, firstInput, secondInput, button) => {
+  popupForm.heading.textContent = heading;
+  popupForm.nameInput.setAttribute("placeholder", firstInput);
+  popupForm.linkInput.setAttribute("placeholder", secondInput);
+  popupForm.button.textContent = button;
+  toggleForm();
+};
 
-function addCard(card) {
-  cardsContainer.appendChild(card);
-}
-
-function createCard(event) {
+const submitCardForm = (event) => {
   event.preventDefault();
-  if (popupForm.name.value && popupForm.link.value) {
-    addCard(renderCard(popupForm.name.value, popupForm.link.value));
-    popupForm.reset();
+  if (popupForm.form.name.value && popupForm.form.link.value) {
+    addCard(renderCard(popupForm.form.name.value, popupForm.form.link.value));
+    popupForm.form.reset();
+    toggleForm();
+    popupForm.form.removeEventListener("submit", submitCardForm);
+  }
+};
+
+const renderCardForm = () => {
+  renderForm("Новое место", "Название", "Ссылка на картинку", "+");
+  popupForm.form.addEventListener("submit", submitCardForm);
+};
+
+const submitProfileEditForm = (event) => {
+  event.preventDefault();
+  const name = popupForm.form.name.value;
+  const job = popupForm.form.link.value;
+  if (name && job) {
+    const nameElement = document.querySelector(".user-info__name");
+    const jobElement = document.querySelector(".user-info__job");
+    nameElement.textContent = name;
+    jobElement.textContent = job;
+    popupForm.form.reset();
     toggleForm();
   }
-}
-function deleteCard(event) {
+  popupForm.form.removeEventListener("submit", submitProfileEditForm);
+};
+
+const renderProfileEditForm = () => {
+  renderForm("Редактировать профиль", "Имя", "Описание", "Сохранить");
+  const nameElement = document.querySelector(".user-info__name");
+  const jobElement = document.querySelector(".user-info__job");
+  popupForm.form.name.value = nameElement.textContent;
+  popupForm.form.link.value = jobElement.textContent;
+  popupForm.form.addEventListener("submit", submitProfileEditForm);
+};
+const likeCard = (event) =>
+  event.target.classList.toggle("place-card__like-icon_liked");
+
+const addCard = (card) => cardsContainer.appendChild(card);
+
+const createCard = (event) => {
+  event.preventDefault();
+  if (popupForm.form.name.value && popupForm.form.link.value) {
+    addCard(renderCard(popupForm.form.name.value, popupForm.form.link.value));
+    popupForm.form.reset();
+    toggleForm();
+  }
+};
+const deleteCard = (event) => {
   if (event.target.classList.contains("place-card__delete-icon")) {
     event.currentTarget.removeEventListener("click", deleteCard);
     event.currentTarget
@@ -62,15 +109,13 @@ function deleteCard(event) {
       .removeEventListener("click", likeCard);
     event.currentTarget.remove();
   }
-}
+};
 
-popupShowButton.addEventListener("click", toggleForm);
+showAddCardFormButton.addEventListener("click", renderCardForm);
+editProfileButton.addEventListener("click", renderProfileEditForm);
 popupHideButton.addEventListener("click", toggleForm);
-popupForm.addEventListener("submit", createCard);
-
 document.addEventListener("keyup", function (e) {
   if (
-    // Отлично -- проверка открыта ли форма
     popupContainer.classList.contains("popup_is-opened") &&
     e.key === "Escape"
   )
@@ -82,24 +127,3 @@ function init() {
 }
 
 init();
-
-// Здравствуйте!
-
-// ## Итог
-
-// - код работает, нет синтаксических и других ошибок
-// - функционал, перечисленный в задании, работает (при перезагрузке на страницу добавляются
-//   10 карточек, форма открывается и закрывается, можно добавить, удалить и лайкнуть карточку)
-// - функционал работает без ошибок
-// - карточку можно добавить нажав Enter, находясь в одном из текстовых полей
-// - верное использование `let` и `const`
-// - функции, декларированные как `function functionName() {}` не вызываются до того, как
-//   были объявлены
-
-// Работа принята
-
-
-// Может быть интересно:
-// Воспользуйтесь `<template>` -- https://developer.mozilla.org/ru/docs/Web/HTML/Element/template
-// И `cloneNode` -- https://developer.mozilla.org/ru/docs/Web/API/Node/cloneNode
-// для удобного тиражирования одинаковых объектов
