@@ -12,7 +12,8 @@ const popupForm = {
 const showAddCardFormButton = document.querySelector(".user-info__button");
 const popupHideButton = document.querySelector(".popup__close");
 const editProfileButton = document.querySelector(".user-info__edit-button");
-
+const imagePopup = document.querySelector(".image-popup");
+const closeImagePopupButton = document.querySelector(".image-popup__close");
 const renderCard = (name, link) => {
   const card = document.createElement("div");
   card.classList.add("place-card");
@@ -33,15 +34,18 @@ const renderCard = (name, link) => {
   cardDescription.appendChild(likeButton);
   card.appendChild(cardImage);
   card.appendChild(cardDescription);
-
   card.addEventListener("click", deleteCard);
   likeButton.addEventListener("click", likeCard);
-
+  const img = document.querySelector(".image-popup__image");
+  const toggleImage = (event) => {
+    imagePopup.classList.toggle("popup-image_is-opened");
+    img.setAttribute("src", link);
+  };
+  cardImage.addEventListener("click", toggleImage);
   return card;
 };
 
 const toggleForm = () => popupContainer.classList.toggle("popup_is-opened");
-
 const renderForm = (heading, firstInput, secondInput, button) => {
   popupForm.heading.textContent = heading;
   popupForm.nameInput.setAttribute("placeholder", firstInput);
@@ -111,6 +115,10 @@ const deleteCard = (event) => {
   }
 };
 
+const hideImage = (event) =>
+imagePopup.classList.toggle("popup-image_is-opened");
+
+closeImagePopupButton.addEventListener("click", hideImage);
 showAddCardFormButton.addEventListener("click", renderCardForm);
 editProfileButton.addEventListener("click", renderProfileEditForm);
 popupHideButton.addEventListener("click", toggleForm);
@@ -121,7 +129,6 @@ document.addEventListener("keyup", function (e) {
   )
     toggleForm();
 });
-
 function init() {
   initialCards.forEach((card) => addCard(renderCard(card.name, card.link)));
 }
