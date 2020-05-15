@@ -1,17 +1,7 @@
 "use strict";
 
 const cardsContainer = document.querySelector(".places-list");
-const popupContainer = document.querySelector(".popup");
-const popupForm = {
-  form: document.querySelector(".popup__form"),
-  heading: document.querySelector(".popup__title"),
-  nameInput: document.querySelector(".popup__input_type_name"),
-  linkInput: document.querySelector(".popup__input_type_link-url"),
-  button: document.querySelector(".popup__button"),
-};
-const showAddCardFormButton = document.querySelector(".user-info__button");
-const popupHideButton = document.querySelector(".popup__close");
-const editProfileButton = document.querySelector(".user-info__edit-button");
+
 const imagePopup = document.querySelector(".image-popup");
 const closeImagePopupButton = document.querySelector(".image-popup__close");
 const renderCard = (name, link) => {
@@ -38,60 +28,17 @@ const renderCard = (name, link) => {
   likeButton.addEventListener("click", likeCard);
   const img = document.querySelector(".image-popup__image");
   const toggleImage = (event) => {
-    imagePopup.classList.toggle("popup-image_is-opened");
-    img.setAttribute("src", link);
+    if (event.target === event.currentTarget) {
+      imagePopup.classList.toggle("popup-image_is-opened");
+      img.setAttribute("src", link);
+    }
   };
   cardImage.addEventListener("click", toggleImage);
   return card;
 };
 
-const toggleForm = () => popupContainer.classList.toggle("popup_is-opened");
-const renderForm = (heading, firstInput, secondInput, button) => {
-  popupForm.heading.textContent = heading;
-  popupForm.nameInput.setAttribute("placeholder", firstInput);
-  popupForm.linkInput.setAttribute("placeholder", secondInput);
-  popupForm.button.textContent = button;
-  toggleForm();
-};
+const isLink = (link) => true;
 
-const submitCardForm = (event) => {
-  event.preventDefault();
-  if (popupForm.form.name.value && popupForm.form.link.value) {
-    addCard(renderCard(popupForm.form.name.value, popupForm.form.link.value));
-    popupForm.form.reset();
-    toggleForm();
-    popupForm.form.removeEventListener("submit", submitCardForm);
-  }
-};
-
-const renderCardForm = () => {
-  renderForm("Новое место", "Название", "Ссылка на картинку", "+");
-  popupForm.form.addEventListener("submit", submitCardForm);
-};
-
-const submitProfileEditForm = (event) => {
-  event.preventDefault();
-  const name = popupForm.form.name.value;
-  const job = popupForm.form.link.value;
-  if (name && job) {
-    const nameElement = document.querySelector(".user-info__name");
-    const jobElement = document.querySelector(".user-info__job");
-    nameElement.textContent = name;
-    jobElement.textContent = job;
-    popupForm.form.reset();
-    toggleForm();
-  }
-  popupForm.form.removeEventListener("submit", submitProfileEditForm);
-};
-
-const renderProfileEditForm = () => {
-  renderForm("Редактировать профиль", "Имя", "Описание", "Сохранить");
-  const nameElement = document.querySelector(".user-info__name");
-  const jobElement = document.querySelector(".user-info__job");
-  popupForm.form.name.value = nameElement.textContent;
-  popupForm.form.link.value = jobElement.textContent;
-  popupForm.form.addEventListener("submit", submitProfileEditForm);
-};
 const likeCard = (event) =>
   event.target.classList.toggle("place-card__like-icon_liked");
 
@@ -116,19 +63,10 @@ const deleteCard = (event) => {
 };
 
 const hideImage = (event) =>
-imagePopup.classList.toggle("popup-image_is-opened");
+  imagePopup.classList.toggle("popup-image_is-opened");
 
 closeImagePopupButton.addEventListener("click", hideImage);
-showAddCardFormButton.addEventListener("click", renderCardForm);
-editProfileButton.addEventListener("click", renderProfileEditForm);
-popupHideButton.addEventListener("click", toggleForm);
-document.addEventListener("keyup", function (e) {
-  if (
-    popupContainer.classList.contains("popup_is-opened") &&
-    e.key === "Escape"
-  )
-    toggleForm();
-});
+
 function init() {
   initialCards.forEach((card) => addCard(renderCard(card.name, card.link)));
 }
