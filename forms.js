@@ -7,7 +7,9 @@ const editProfileButton = document.querySelector(".user-info__edit-button");
 let currentName = "Jaques Causteau";
 let currentJob = "Sailor, Researcher";
 
-const toggleForm = () => popupContainer.classList.toggle("popup_is-opened");
+const toggleForm = () => {
+  popupContainer.classList.toggle("popup_is-opened");
+};
 
 const renderForm = (title, inputs, button, valid = false) => {
   const popup = document.createElement("div");
@@ -145,14 +147,13 @@ const renderCardForm = () => {
 
 addCardButton.addEventListener("click", () => {
   const { popup, form } = renderCardForm();
-
+  popupContainer.innerHTML = "";
   popupContainer.appendChild(popup);
   toggleForm();
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     if (form.checkValidity()) {
       addCard(renderCard(form.name.value, form.link.value));
-      popupContainer.innerHTML = "";
       toggleForm();
       form.reset();
     }
@@ -161,6 +162,7 @@ addCardButton.addEventListener("click", () => {
 
 editProfileButton.addEventListener("click", () => {
   const { popup, form } = renderProfileForm();
+  popupContainer.innerHTML = "";
   popupContainer.appendChild(popup);
   toggleForm();
   form.addEventListener("submit", (event) => {
@@ -173,7 +175,6 @@ editProfileButton.addEventListener("click", () => {
       jobElement.textContent = form.job.value;
       currentJob = form.job.value;
       toggleForm();
-      popupContainer.innerHTML = "";
       form.reset();
     }
   });
@@ -183,6 +184,11 @@ document.addEventListener("keyup", function (e) {
   if (e.key === "Escape") {
     if (popupContainer.classList.contains("popup_is-opened")) toggleForm();
     if (imagePopup.classList.contains("popup-image_is-opened")) hideImage();
-    popupContainer.innerHTML = "";
+  }
+});
+
+popupContainer.addEventListener("click", function (e) {
+  if (e.target === e.currentTarget) {
+    toggleForm();
   }
 });
