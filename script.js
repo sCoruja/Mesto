@@ -37,7 +37,6 @@ const renderCard = (name, link) => {
   card.appendChild(cardDescription);
   card.addEventListener("click", deleteCard);
   likeButton.addEventListener("click", likeCard);
-  /*REVIEW. Надо лучше. Лучше объявить toggleImage вне функции renderCard. Функция renderCard должна отвечать только за создание элемента карточки. */
   cardImage.addEventListener("click", toggleImage);
   return card;
 };
@@ -58,7 +57,6 @@ const createCard = (event) => {
   }
 };
 const deleteCard = (event) => {
-  /*REVIEW. Можно лучше. Слушатель toggleImage также надо удалить. */
   if (event.target.classList.contains("place-card__delete-icon")) {
     event.currentTarget.removeEventListener("click", deleteCard);
     event.currentTarget
@@ -67,7 +65,7 @@ const deleteCard = (event) => {
     event.currentTarget
       .querySelector(".place-card__image")
       .removeEventListener("click", toggleImage);
-    event.currentTarget.remove(); 
+    event.currentTarget.remove();
   }
 };
 
@@ -90,5 +88,19 @@ init();
 /*REVIEW по заданию 7. Резюме.
 
 Работа неплохая, но прежде всего надо исправить ошибки, которые наглядно описаны в файле Readme.docx.
+
+
+REVIEW2 по заданию 7. Резюме2.
+
+Раздвоение форм исправлено. Рекомендации выполнены.
+
+Но валидация форм так правильно и не работает.
+
+Я рекомендую Вам ещё раз прочитать как должна работать валидация в описании задания, просмотреть видео и переписать функции валидации заново.
+Я думаю это будет рациональней, чем искать ошибки в написанных функциях.
+
+Какие неточности работы валидации обнаружила я, смотрите на снимках "Снимок экрана в 2020-05-18 23-50-09.png" и "Снимок экрана в 2020-05-19 00-07-40.png".
+Наверняка этих неточностей больше.
+
 
 */

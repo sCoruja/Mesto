@@ -47,9 +47,11 @@ const renderForm = (title, inputs, button, valid = false) => {
     const errorsSpan = document.createElement("span");
     errorsSpan.classList.add("popup__error-message");
     inputElement.addEventListener("input", () => {
-      if (form.checkValidity()) {
-        submitButton.classList.add("popup__button_active");
+      if (inputElement.checkValidity()) {
         errorsSpan.textContent = "";
+        if (form.checkValidity()){
+        submitButton.classList.add("popup__button_active");
+        }
       } else {
         if (inputElement.validity.valueMissing)
           errorsSpan.textContent = "Это обязательное поле";
