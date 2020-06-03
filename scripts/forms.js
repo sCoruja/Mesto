@@ -2,14 +2,25 @@
 
 class Form {
   constructor(inputs, buttonText, title, callback) {
-    this._inputs = inputs.map((input) => new Input(...input));
+    this._inputs = inputs;
+    /*
+     Надо исправить:
+     - Внутри классов нельзя создавать инстансы других классов
+    */
     this._button = undefined;
     this._title = title;
     this._buttonText = buttonText;
     this._form = undefined;
     this._isValid = false;
     this._submitCallback = callback;
-    this._validator = new FormValidator(this);
+    this._validator = undefined;
+    /*
+     Надо исправить:
+     + Внутри классов нельзя создавать инстансы других классов
+    */
+  }
+  setValidator(validator){
+    this._validator = validator
   }
   render() {
     this._form = document.createElement("form");
@@ -19,7 +30,6 @@ class Form {
     this._button = document.createElement("button");
     this._button.setAttribute("type", "submit");
     this._button.className = "button button_size_big popup__button";
-    if (this._isValid) this._button.classList.add("popup__button_active");
     this._button.textContent = this._buttonText;
     const titleElement = document.createElement("h3");
     titleElement.classList.add("popup__title");
@@ -29,17 +39,17 @@ class Form {
       ...this._inputs.map((input) => input.render()),
       this._button
     );
+    this._isValid = this._form.checkValidity();
+    if (this._isValid) this._button.classList.add("popup__button_active");
     return this._form;
   }
 
   submitForm(e) {
     e.preventDefault();
     if (this._isValid) {
-      if (this._isValid) {
-        this._submitCallback(
-          ...this._inputs.map((input) => input.inputElement.value)
-        );
-      }
+      this._submitCallback(
+        ...this._inputs.map((input) => input.inputElement.value)
+      );
     } else {
       this._validator.checkInputValidity();
     }
@@ -60,15 +70,16 @@ class ProfileForm extends Form {
       [
         ["name", "text", "Название", "2", "30", name],
         ["job", "text", "Название", "2", "30", job],
-      ],
+      ].map((input) => new Input(...input)),
       "Сохранить",
       "Редактировать профиль",
       callback
     );
 
-    this._name = name;
-    this._job = job;
-    this._isValid = true;
+    /*
+      Можно лучше:
+      + Убрать неиспользуемую переменную
+    */
   }
   render(name, job) {
     super.render();
@@ -84,7 +95,7 @@ class CardForm extends Form {
       [
         ["name", "text", "Название", "2", "30"],
         ["link", "url", "Ссылка на картинку"],
-      ],
+      ].map((input) => new Input(...input)),
       "+",
       "Новое место",
       callback

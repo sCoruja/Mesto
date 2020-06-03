@@ -44,7 +44,7 @@ class Popup {
     this.popupCloseButton.addEventListener("click", function (e) {
         close();
     });
-    document.addEventListener("keyup", function (e) {
+    document.addEventListener("keyup", (e) => {
       if (e.key === "Escape") {
         if (this._container.classList.contains("popup_is-opened")) this.close();
       }

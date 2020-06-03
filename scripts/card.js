@@ -1,10 +1,11 @@
 class Card {
-  constructor(name, link) {
+  constructor(name, link, callback) {
     this.name = name;
     this.link = link;
     this._cardContainer = undefined;
     this._likeButton = undefined;
     this._removeButton = undefined;
+    this._clickHandler = callback;
   }
 
   create() {
@@ -31,7 +32,7 @@ class Card {
     // ¯\_(ツ)_/¯
     this._removeButton.addEventListener("click", this.remove.bind(this));
     this._likeButton.addEventListener("click", this.like.bind(this));
-    
+    this._cardContainer.addEventListener("click", this._clickHandler);
     return this._cardContainer;
   }
 
@@ -42,8 +43,15 @@ class Card {
   remove() {
     this._removeButton.removeEventListener("click", this.remove.bind(this));
     this._likeButton.removeEventListener("click", this.like.bind(this));
+    this._cardContainer.removeEventListener("click", this._clickHandler);
     this._cardContainer.remove();
   }
+
+  _clickHandler() {
+
+  }
+  /*
+   Надо исправить:
+   + Слушатель открытия попапа с картинкой должен назначаться внутри класса Card
+  */
 }
-
-
