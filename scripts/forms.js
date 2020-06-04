@@ -1,8 +1,8 @@
 "use strict";
 
 class Form {
-  constructor(inputs, buttonText, title, callback) {
-    this._inputs = inputs;
+  constructor(inputs, buttonText, title, callback, inputConstructor) {
+    this._inputs = inputConstructor(inputs);
     /*
      Надо исправить:
      - Внутри классов нельзя создавать инстансы других классов

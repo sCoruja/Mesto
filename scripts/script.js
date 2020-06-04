@@ -18,10 +18,11 @@ const userInfo = new UserInfo(
 const profileForm = new ProfileForm(
   userInfo.name,
   userInfo.job,
-  updateUserInfo
+  updateUserInfo,
+  createInputs
 );
-profileForm.setValidator(new FormValidator(profileForm))
-const cardForm = new CardForm(addCard);
+profileForm.setValidator(new FormValidator(profileForm));
+const cardForm = new CardForm(addCard, createInputs);
 cardForm.setValidator(new FormValidator(cardForm));
 const popup = new Popup();
 
@@ -36,6 +37,9 @@ function openImage(e) {
     img.setAttribute("src", url.replace('"', ""));
     popup.open(img);
   }
+}
+function createInputs(inputs) {
+  return inputs.map((input) => new Input(...input));
 }
 function addCard(name, link) {
   cardList.addCard(new Card(name, link, openImage));

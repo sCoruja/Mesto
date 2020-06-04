@@ -1,9 +1,15 @@
 class ProfileForm extends Form {
-  constructor(name, job, callback) {
-    super([
-      ["name", "text", "Название", "2", "30", name],
-      ["job", "text", "Название", "2", "30", job],
-    ].map((input) => new Input(...input)), "Сохранить", "Редактировать профиль", callback);
+  constructor(name, job, callback, inputConstructror) {
+    super(
+      [
+        ["name", "text", "Название", "2", "30", name],
+        ["job", "text", "Название", "2", "30", job],
+      ],
+      "Сохранить",
+      "Редактировать профиль",
+      callback,
+      inputConstructror,
+    );
     /*
       Можно лучше:
       + Убрать неиспользуемую переменную
