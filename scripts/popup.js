@@ -42,7 +42,7 @@ class Popup {
       }
     });
     this.popupCloseButton.addEventListener("click", function (e) {
-        close();
+      close();
     });
     document.addEventListener("keyup", (e) => {
       if (e.key === "Escape") {

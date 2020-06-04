@@ -8,12 +8,8 @@ class ProfileForm extends Form {
       "Сохранить",
       "Редактировать профиль",
       callback,
-      inputConstructror,
+      inputConstructror
     );
-    /*
-      Можно лучше:
-      + Убрать неиспользуемую переменную
-    */
   }
   render(name, job) {
     super.render();

@@ -5,18 +5,19 @@ class Card {
     this._cardContainer = undefined;
     this._likeButton = undefined;
     this._removeButton = undefined;
+    this._cardImage = undefined;
     this._clickHandler = callback;
   }
 
   create() {
     this._cardContainer = document.createElement("div");
     this._cardContainer.classList.add("place-card");
-    const cardImage = document.createElement("div");
-    cardImage.classList.add("place-card__image");
-    cardImage.style.backgroundImage = `url(${this.link})`;
+    this._cardImage = document.createElement("div");
+    this._cardImage.classList.add("place-card__image");
+    this._cardImage.style.backgroundImage = `url(${this.link})`;
     this._removeButton = document.createElement("button");
     this._removeButton.classList.add("place-card__delete-icon");
-    cardImage.appendChild(this._removeButton);
+    this._cardImage.appendChild(this._removeButton);
     const cardDescription = document.createElement("div");
     cardDescription.classList.add("place-card__description");
     const cardName = document.createElement("h3");
@@ -26,13 +27,11 @@ class Card {
     this._likeButton.classList.add("place-card__like-icon");
     cardDescription.appendChild(cardName);
     cardDescription.appendChild(this._likeButton);
-    this._cardContainer.appendChild(cardImage);
+    this._cardContainer.appendChild(this._cardImage);
     this._cardContainer.appendChild(cardDescription);
-
-    // ¯\_(ツ)_/¯
     this._removeButton.addEventListener("click", this.remove.bind(this));
     this._likeButton.addEventListener("click", this.like.bind(this));
-    this._cardContainer.addEventListener("click", this._clickHandler);
+    this._cardImage.addEventListener("click", this._clickHandler);
     return this._cardContainer;
   }
 
@@ -43,15 +42,7 @@ class Card {
   remove() {
     this._removeButton.removeEventListener("click", this.remove.bind(this));
     this._likeButton.removeEventListener("click", this.like.bind(this));
-    this._cardContainer.removeEventListener("click", this._clickHandler);
+    this._cardImage.removeEventListener("click", this._clickHandler);
     this._cardContainer.remove();
   }
-
-  _clickHandler() {
-
-  }
-  /*
-   Надо исправить:
-   + Слушатель открытия попапа с картинкой должен назначаться внутри класса Card
-  */
 }
