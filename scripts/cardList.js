@@ -1,7 +1,10 @@
 class CardList {
-  constructor(container, initialList) {
+  constructor(container) {
     this._container = container;
-    this._list = initialList;
+    this._list = undefined;
+  }
+  init(cards){
+    this._list = cards;
   }
   addCard(card) {
     this._container.appendChild(card.create());

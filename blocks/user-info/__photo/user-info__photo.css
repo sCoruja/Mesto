@@ -7,7 +7,9 @@
   background-position: center;
   background-image: url(../../../images/avatar.jpg);
 }
-
+.user-info__photo:hover {
+  opacity: 0.5; 
+}
 @media screen and (max-width: 980px) {
   .user-info__photo {
     margin-top: 40px;
