@@ -24,7 +24,7 @@ class App {
 
   showCardForm() {
     document.activeElement.blur();
-    if (this.cardForm) this.cardForm.removeEventListener();
+    if (this.cardForm) this.cardForm.removeEventListeners();
     this.cardForm = new CardForm(this.addCard.bind(this), (inputs) =>
       inputs.map((input) => new Input(...input))
     );
@@ -33,26 +33,30 @@ class App {
     this.cardForm.setEventListeners();
   }
   async addCard(name, link) {
-    const card = await this.api.createCard({ name, link });
-    this.cards.addCard(
-      new Card(
-        card.name,
-        card.link,
-        card._id,
-        card.likes,
-        card.owner,
-        this.user.id,
-        this.showImagePopup,
-        this.likeCard,
-        this.removeCard
-      )
-    );
+    try {
+      const card = await this.api.createCard({ name, link });
+      this.cards.addCard(
+        new Card(
+          card.name,
+          card.link,
+          card._id,
+          card.likes,
+          card.owner,
+          this.user.id,
+          this.showImagePopup.bind(this),
+          this.likeCard.bind(this),
+          this.removeCard.bind(this)
+        )
+      );
+    } catch (err) {
+      console.log(`При добавлении карточки произошла ошибка: ${err}`);
+    }
     this.popup.close();
   }
   showImagePopup(event) {
     if (event.target.className === "place-card__image") {
       const img = document.createElement("img");
-      img.classList.add('popup__image')
+      img.classList.add("popup__image");
       const url = event.target.style.backgroundImage
         .split("")
         .slice(4, -1)
@@ -65,15 +69,22 @@ class App {
 
   // callbacks for Card class
   async removeCard(id) {
-    if(window.confirm('Are you sure?'))
-    await this.api.deleteCard(id);
+    try {
+      if (window.confirm("Are you sure?")) await this.api.deleteCard(id);
+    } catch (err) {
+      console.log(`При удалении карточки произошла ошибка: ${err}`);
+    }
   }
   async likeCard(id, isLiked) {
-    await this.api.likeCard(id, isLiked);
+    try {
+      await this.api.likeCard(id, isLiked);
+    } catch (err) {
+      console.log(`При попытке поставить лайк произошла ошибка: ${err}`);
+    }
   }
 
   showUserForm() {
-    if (this.profileForm) this.profileForm.removeEventListener();
+    if (this.profileForm) this.profileForm.removeEventListeners();
     this.profileForm = new ProfileForm(
       this.user.name,
       this.user.job,
@@ -87,22 +98,28 @@ class App {
   }
 
   async updateUserInfo(name, about) {
-    const user = await this.api.updateUserInfo({ name, about });
-    this.user.setUserInfo(user.name, user.about);
-
+    try {
+      const user = await this.api.updateUserInfo({ name, about });
+      this.user.setUserInfo(user.name, user.about);
+    } catch (err) {
+      console.log(`При редактировании профиля произошла ошибка: ${err}`);
+    }
     this.popup.close();
   }
 
   async updateUserAvatar(avatar) {
-    const user = await this.api.updateUserAvatar({ avatar });
-    this.user.setUserAvatar(user.avatar);
+    try {
+      const user = await this.api.updateUserAvatar({ avatar });
+      this.user.setUserAvatar(user.avatar);
+    } catch (err) {
+      console.log(`При обновлении аватара произошла ошибка: ${err}`);
+    }
     this.popup.close();
   }
   showPhotoForm() {
-    if (this.photoForm) this.photoForm.removeEventListener();
-    this.photoForm = new PhotoForm(
-      this.updateUserAvatar.bind(this),
-      (inputs) => inputs.map((input) => new Input(...input))
+    if (this.photoForm) this.photoForm.removeEventListeners();
+    this.photoForm = new PhotoForm(this.updateUserAvatar.bind(this), (inputs) =>
+      inputs.map((input) => new Input(...input))
     );
     this.photoForm.setValidator(new FormValidator(this.photoForm));
     document.activeElement.blur();
@@ -116,7 +133,10 @@ class App {
       "click",
       this.showUserForm.bind(this)
     );
-    this.userPhotoElement.addEventListener("click", this.showPhotoForm.bind(this));
+    this.userPhotoElement.addEventListener(
+      "click",
+      this.showPhotoForm.bind(this)
+    );
   }
   async init() {
     // получение информации о пользователе
@@ -154,7 +174,40 @@ class App {
     this.cards.render();
   }
   run() {
-    this.init.call(this);
-    this.setEventListeners();
+    try {
+      this.init.call(this);
+      this.setEventListeners();
+    } catch (err) {
+      console.log(`При загрузке страницы произошла ошибка: ${err}.`);
+    }
   }
 }
+
+/*
+ Что понравилось:
+ - Структура приложения
+ - Api построен на async/await
+ - есть возможность проставления, удаления, отображение лайков
+ - Возможность изменять аватар и доабвлять карточки
+ - Есть возможность изменять профиль
+ Можно лучше:
+ + Удалить закомментированный код из script.js
+ Надо исправить:
+ + Новые карточки невозможно ни удалить, ни лайкнуть, ни открыть у них попап с картинкой
+ + После одного изменения профиля, невозможно открыть поапап изменения профиля
+ + После открытия одного раза попапа с автаром, второй раз его открыть невозможно
+
+
+
+
+    --Если правильно понял написанное ниже, то исправил--
+ 
+ +- Сейчас не все запросы правильно обрабатываются. При работе с async/await API необходимо
+ возращать промис, который снаружи будет дожидаться async функция. Так, например, еще до выполнения запроса добавления карточки,
+ карточка пытается добавиться в DOM, что вызывает ошибки в консоли.
+ +- Ошибки сети и неправильных запросов обрабатываются неправильно. Пример, как это должно быть -
+ В Api.js в request нет блока try/catch. Все блоки распределены внутри непосредственно классов. Так метод like
+ класса Card должен быть полностью обернут в try/catch, тогда все ошибки будут правильно обрабатываться и изменение Dom
+ будет происходить только после успешного запроса
+ +- Dom должен изменяться только если запрос был выполнен успешно
+*/

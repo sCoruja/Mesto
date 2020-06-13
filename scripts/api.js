@@ -14,19 +14,15 @@ class Api {
       requestParams.body = body;
       headers["Content-Type"] = "application/json";
     }
-    try {
-      const response = await fetch(`${this._baseUrl}${url}`, requestParams);
-      if (response.ok) {
-        return response.json();
-      }
-      return await Promise.reject(`Ошибка: ${response.status}`);
-    } catch (err) {
-      return console.log(err);
+    const response = await fetch(`${this._baseUrl}${url}`, requestParams);
+    if (response.ok) {
+      return response.json();
     }
+    return Promise.reject(`Ошибка: ${response.status}`);
   }
 
-  async getUserInfo() {
-    const userInfo = await this.request("/users/me", "GET");
+  getUserInfo() {
+    const userInfo = this.request("/users/me", "GET");
     return userInfo;
   }
 
@@ -43,16 +39,16 @@ class Api {
     return this.request("/cards", "POST", card);
   }
 
-  async deleteCard(cardId) {
-    return await this.request(`/cards/${cardId}`, "DELETE");
+  deleteCard(cardId) {
+    return this.request(`/cards/${cardId}`, "DELETE");
   }
 
-  async likeCard(cardId, isLiked) {
-    if (!isLiked) return await this.request(`/cards/like/${cardId}`, "PUT");
-    return await this.request(`/cards/like/${cardId}`, "DELETE");
+  likeCard(cardId, isLiked) {
+    if (!isLiked) return this.request(`/cards/like/${cardId}`, "PUT");
+    return this.request(`/cards/like/${cardId}`, "DELETE");
   }
 
   updateUserAvatar(avatar) {
-    return this.request("/users/me/avatar", "PATCH", avatar );
+    return this.request("/users/me/avatar", "PATCH", avatar);
   }
 }

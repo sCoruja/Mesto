@@ -40,8 +40,8 @@ class FormValidator {
     });
   }
   removeEventListeners() {
-    this._inputs.forEach((input) => {
-      input.inputElement.removeEventListeners(
+    this._form._inputs.forEach((input) => {
+      input.inputElement.removeEventListener(
         "input",
         this.validateForm.bind(this)
       );
