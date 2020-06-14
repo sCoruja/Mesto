@@ -3,6 +3,8 @@
   position: relative;
   box-sizing: border-box;
   max-height: 80vh;
+  max-width: 80vw;
+  margin-bottom: 50px;
 }
 
 @media screen and (max-width: 540px) {

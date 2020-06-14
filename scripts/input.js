@@ -1,5 +1,12 @@
 class Input {
-  constructor(name, type, placeholder, minLength = 0, maxLength = 0, value = "") {
+  constructor(
+    name,
+    type,
+    placeholder,
+    minLength = 0,
+    maxLength = 0,
+    value = ""
+  ) {
     this._name = name;
     this._type = type;
     this._placeholder = placeholder;

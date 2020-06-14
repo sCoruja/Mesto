@@ -3,10 +3,6 @@
 class Form {
   constructor(inputs, buttonText, title, callback, inputConstructor) {
     this._inputs = inputConstructor(inputs);
-    /*
-     Надо исправить:
-     - Внутри классов нельзя создавать инстансы других классов
-    */
     this._button = undefined;
     this._title = title;
     this._buttonText = buttonText;
@@ -14,13 +10,9 @@ class Form {
     this._isValid = false;
     this._submitCallback = callback;
     this._validator = undefined;
-    /*
-     Надо исправить:
-     + Внутри классов нельзя создавать инстансы других классов
-    */
   }
-  setValidator(validator){
-    this._validator = validator
+  setValidator(validator) {
+    this._validator = validator;
   }
   render() {
     this._form = document.createElement("form");
@@ -63,5 +55,3 @@ class Form {
     this._form.removeEventListener("submit", this.submitForm.bind(this));
   }
 }
-
-

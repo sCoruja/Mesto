@@ -7,8 +7,7 @@ class FormValidator {
       const inputElement = input.inputElement;
       if (inputElement.checkValidity()) {
         input.errorsElement.textContent = "";
-      }
-      else {
+      } else {
         if (inputElement.validity.valueMissing)
           input.errorsElement.textContent = "Это обязательное поле";
         if (inputElement.validity.tooLong)
@@ -24,8 +23,7 @@ class FormValidator {
     this._form._isValid = this._form._form.checkValidity();
     if (this._form._isValid) {
       this._form._button.classList.add("popup__button_active");
-    }
-    else {
+    } else {
       this._form._button.classList.remove("popup__button_active");
     }
   }
@@ -35,12 +33,18 @@ class FormValidator {
   }
   setEventListeners() {
     this._form._inputs.forEach((input) => {
-      input.inputElement.addEventListener("input", this.validateForm.bind(this));
+      input.inputElement.addEventListener(
+        "input",
+        this.validateForm.bind(this)
+      );
     });
   }
   removeEventListeners() {
-    this._inputs.forEach((input) => {
-      input.inputElement.removeEventListeners("input", this.validateForm.bind(this));
+    this._form._inputs.forEach((input) => {
+      input.inputElement.removeEventListener(
+        "input",
+        this.validateForm.bind(this)
+      );
     });
   }
 }
